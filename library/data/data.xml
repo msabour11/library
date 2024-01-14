@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="book_seq_ref" model="ir.sequence">
+        <field name="name">Book Reference</field>
+        <field name="code">book_ref</field>
+        <field name="prefix">code</field>
+        <field name="padding">5</field>
+        <!--            <field name="company_id" eval="False"/>-->
+    </record>
+</odoo>

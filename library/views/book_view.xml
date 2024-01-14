@@ -1,0 +1,129 @@
+<odoo>
+    <record id="view_tree_book" model="ir.ui.view">
+        <field name="name">Book Tree</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="date_published"/>
+                <field name="publisher_id" optional="1"/>
+                <field name="state" widget="badge"
+
+                       decoration-muted="state == 'draft'"
+                       decoration-info="state  == 'published'"
+                       decoration-success="state == 'new'"/>
+                <field name="isbn" groups="library.library_manager"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_book" model="ir.ui.view">
+        <field name="name">Book Form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <form duplicate="0">
+
+                <sheet>
+                    <!--                    to handle each archive record-->
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <!--                    to handle state action-->
+                    <header>
+                        <button name="action_new" string="Set To New" type="object"
+                                class="btn-secondary" attrs="{'invisible':[('state','=','new')]}"/>
+                        <button name="action_publish" string="Set To Published" type="object" class="btn-secondary"
+                                attrs="{'invisible':[('state','=','published')]}"/>
+                        <button name="action_draft" string="Set To Draft" type="object" class="btn-secondary"
+                                attrs="{'invisible':[('state','=','draft')]}"/>
+
+                        <field name="state" widget="statusbar"/>
+                        <button name="open_publisher_wizard" string="add Publisher" type="object"
+                                class="btn-secondary"/>
+
+                    </header>
+                    <!--                    <button name="action_preview_sale_order" type="object" class="oe_stat_button" icon="fa-globe icon" title="asdkm"/>-->
+                    <!--                    to handle and generate sequence for each record -->
+                    <div class="oe_title mt-5">
+
+                        <h1>
+                            <field name="ref" readonly='1'/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="General Info.">
+                            <field name="name"/>
+                            <field name="date_published"/>
+                            <field name="state"/>
+                            <field name="publisher_id" options="{'no_create': True}"/>
+
+                        </group>
+                        <group string="Additional Info.">
+                            <field name="isbn"/>
+                            <field name="active"/>
+                            <field name="image" widget="image" options='{"size": [100,100]}'/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="History log">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="note"/>
+                                    <field name="price" sum="total"/>
+
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_search_book" model="ir.ui.view">
+        <field name="name">Book Search</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="isbn"/>
+                <field name="name"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="active" string="Un-Active" domain="[('active', '!=', True)]"/>
+                <filter name="my_books" string="My-books" domain="[('create_uid','=', uid)]"/>
+                <filter name="date" string="Date" context="{'group_by':'date_published'}"/>
+                <filter name="active" string="Active" context="{'group_by':'active'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_library_book" model="ir.actions.act_window">
+        <field name="name">Library Books</field>
+        <field name="res_model">library.book</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--    server action to mark state as new-->
+    <record id="action_add_publisher" model="ir.actions.server">
+        <field name="name">Mark AS New State</field>
+        <field name="model_id" ref="library.model_library_book"/>
+        <field name="binding_model_id" ref="library.model_library_book"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+            action = records.mark_state_as_new()
+        </field>
+    </record>
+    <menuitem id="menuitem_library_book"
+              name="All Books"
+              parent="menu_root_book"
+              action="action_library_book"/>
+
+</odoo>

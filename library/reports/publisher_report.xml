@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="publisher_print" model="ir.actions.report">
+            <field name="name">Publisher Print</field>
+            <field name="model">library.publisher</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">library.publisher_print_template</field>
+            <field name="report_file">library.publisher_print_template</field>
+            <field name="print_report_name">'Publisher - %s' % (object.first_name)</field>
+            <!--            <field name="print_report_name">f'Book Receipt -{object.name}'</field>-->
+            <field name="binding_model_id" ref="model_library_publisher"/>
+            <field name="binding_type">report</field>
+        </record>
+        <template id="publisher_print_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <style>
+                             table th {
+                            font: normal normal bold 15px/15px Allah Muhammad ٢٠٢٢;
+                            border:1px solid #b3adad;
+                            padding:5px;
+                            background: #f0f0f0;
+                            color: #313030;
+                            }
+                        </style>
+
+                        <div class="page">
+
+                            <table class="table table-bordered ">
+                                <tbody>
+                                    <tr>
+                                        <th colspan="2" >GENERAL INFO.</th>
+                                    </tr>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <td>
+                                            <t t-esc="o.first_name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Last Name</th>
+                                        <td>
+                                            <t t-esc="o.last_name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date Joined</th>
+                                        <td>
+                                            <t t-esc="o.date_join"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Age</th>
+                                        <td>
+                                            <t t-esc="o.age"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+
+                        </div>
+                    </t>
+                </t>
+
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

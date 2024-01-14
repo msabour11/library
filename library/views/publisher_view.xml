@@ -1,0 +1,74 @@
+<odoo>
+    <record id="view_tree_publisher" model="ir.ui.view">
+        <field name="name">publisher Tree</field>
+        <field name="model">library.publisher</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="date_join"/>
+                <field name="active" optional="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_form_publisher" model="ir.ui.view">
+        <field name="name">Publisher Form</field>
+        <field name="model">library.publisher</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="General Info.">
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="date_join" attrs="{'readonly':[('first_name','=','ali')]}"/>
+                        </group>
+                        <group string="Other Info.">
+                            <field name="national_id"/>
+                            <field name="birth_date"/>
+                            <field name="age"/>
+                            <field name="active"/>
+                            <field name="image" widget="image"/>
+                            <field name="book_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+<!--                    <notebook>-->
+<!--                        <page>-->
+<!--                            <field name="book_ids"/>-->
+<!--                        </page>-->
+<!--                    </notebook>-->
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_search_publisher" model="ir.ui.view">
+        <field name="name">Publisher Search</field>
+        <field name="model">library.publisher</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="first_name"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="active" string="Un-Active" domain="[('active', '!=', True)]"/>
+                <filter name="active" string="Active" context="{'group_by':'active'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_library_publisher" model="ir.actions.act_window">
+        <field name="name">Publisher Books</field>
+        <field name="res_model">library.publisher</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menuitem_library_publisher"
+              name="Publishers"
+              parent="menu_root_publisher"
+              action="action_library_publisher"/>
+</odoo>
